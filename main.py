@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-import ntplib, base64, subprocess, zipfile
+import ntplib, base64, subprocess, zipfile, os
 from datetime import datetime
 from tkcalendar import DateEntry
 
@@ -8,6 +8,9 @@ from tkcalendar import DateEntry
 def encode_string(string):
     encoded_string = base64.b64encode(string.encode("utf-8")).decode("utf-8")
     return encoded_string
+#to delete the -info.txt after it ends
+def delete_info():
+    os.remove("_info.txt")
 
 # Function to get the current date in the format "MM/DD/YY"
 def get_current_date():
@@ -103,6 +106,7 @@ def start_shell_compression(location_entry, password_entry, output_name_entry):
     zip_result = subprocess.run(["zip", "-r", "-P", e_password, output_name, location], capture_output=True, text=True)
     #for creating the info file without password so it can tell when to unlock and how to unlock
     subprocess.run(["zip", "-r",  output_name, "_info.txt"], capture_output=True, text=True)
+    delete_info()
     
     if zip_result.returncode == 0:
         print("Successfully created the ZIP file.")
